@@ -1,0 +1,13 @@
+@if ( showErrorWindow$ | async) {
+<div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+    <h2 class="text-lg font-semibold text-red-600">Error</h2>
+    <p class="text-gray-700 mt-2">{{ errorMessage$ | async }}</p>
+    <div class="mt-4 flex justify-end">
+      <button class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded" (click)="closeError()">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+}

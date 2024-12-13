@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DeadlineService } from '../shared/services';
-import { take, tap } from 'rxjs';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-deadline',
