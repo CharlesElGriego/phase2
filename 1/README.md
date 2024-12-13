@@ -11,6 +11,7 @@
   - [Frontend](#frontend)
   - [Backend](#backend)
 - [FAQ](#faq)
+- [Demo Images](#demo-images)
 
 ### Overview
 
@@ -100,3 +101,9 @@ This project is a simple Angular application with a backend server built using N
 
 1. What happens if I manually edit the deadline?
    - If you manually edit the MANUALLY_SET_DEADLINE environment variable or change backend logic, restart the backend server to reflect the changes.
+
+## Demo Images
+
+![image](images/deadline1.png)
+![image](images/deadline2.png)
+![image](images/coverage.png)
