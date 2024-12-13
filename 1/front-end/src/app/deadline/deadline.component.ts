@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { DeadlineService } from '../shared/services';
+import { take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-deadline',
@@ -10,7 +11,20 @@ import { DeadlineService } from '../shared/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeadlineComponent {
-  secondsLeft$ = this.deadlineService.getCountdown();
-  deadlineDate = this.deadlineService.getDeadlineDate();
-  constructor(private readonly deadlineService: DeadlineService) {}
+  currentDate = signal(new Date());
+  secondsLeft$ = this.deadlineService.getCountdown().pipe(
+    tap(secondsLeft => {
+      if(secondsLeft === 0){
+        console.log('Countdown Complete!')
+      }
+    })
+  );
+  deadlineDate = this.deadlineService.getDeadlineDate().pipe(take(2));
+  constructor(private readonly deadlineService: DeadlineService) { }
+
+  resetDeadline(){
+    this.secondsLeft$.subscribe((secondsLeft) => {
+      console.log('secondsLeft', secondsLeft);
+    })
+  }
 }

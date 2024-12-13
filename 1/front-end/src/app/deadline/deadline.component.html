@@ -1,21 +1,33 @@
-<div class="flex flex-col items-center justify-center pt-10 pb-10 bg-gray-50 text-gray-800">
-  <!-- Deadline Date -->
+<div class="flex flex-col items-center justify-center pt-10 pb-10 pe-4 ps-4 bg-gray-50 text-gray-800">
+
+  <!-- Current and Deadline Date & Time -->
   <div class="text-xl font-semibold mb-4">
-    Deadline Date: <span class="text-red-600">{{ deadlineDate | async | date: 'medium' }}</span>
+    Current Date &amp; Time:
+    <span class="text-green-700">
+      {{ currentDate() | date: 'medium' }}
+    </span>
+  </div>
+  <div class="text-xl font-semibold mb-4">
+    Deadline Date &amp; Time:
+    <span class="text-red-600">
+      {{ (deadlineDate | async) | date: 'medium' }}
+    </span>
   </div>
 
-  <!-- Countdown Timer -->
-  <div class="text-xl font-semibold mb-4">
-    Seconds left to deadline:
-  </div>
+  <!-- Countdown or Deadline Passed -->
+  @if (secondsLeft$ | async; as secondsLeft) {
+  <div class="text-l font-semibold mb-4">Seconds left to deadline:</div>
+
   <div class="flex items-center justify-center w-48 h-48 rounded-full bg-blue-100 border-4 border-blue-500 shadow-md">
-    @if (secondsLeft$ | async; as secondsLeft) {
     <p class="text-4xl font-bold text-blue-600">
       {{ secondsLeft }}
     </p>
-    }
-    @else {
-    <p class="text-2xl font-semibold text-red-500">Deadline Passed!</p>
-    |}
   </div>
+  } @else {
+  <div class="text-xl font-semibold mb-4">
+    <p class="text-2xl font-semibold text-red-600">
+      Deadline Passed!
+    </p>
+  </div>
+  }
 </div>

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Deadline } from '../models';
-import { BehaviorSubject, interval, map, Observable, startWith, switchMap, takeWhile, tap } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, interval, map, Observable, shareReplay, startWith, switchMap, takeWhile, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -23,11 +23,13 @@ export class DeadlineService {
     return this.getDeadline().pipe(
       switchMap(data =>
         interval(1000).pipe(
-          startWith(0), // Emit immediately
-          map(elapsedSeconds => data.secondsLeft - elapsedSeconds), // Directly emit the countdown value
-          takeWhile(secondsLeft => secondsLeft > 0) // Stop at 0
+          startWith(0),
+          map(elapsedSeconds => Math.max(data.secondsLeft - elapsedSeconds, 0)), // Prevent negative values
+          takeWhile(secondsLeft => secondsLeft > 0, true), // Emit `0` once and complete
+          distinctUntilChanged() // Eliminate consecutive duplicate emissions
         )
-      )
+      ),
+      shareReplay(1) // Share the latest value across subscribers
     );
   }
 
