@@ -104,6 +104,16 @@ This project is a simple Angular application with a backend server built using N
 
 ## Demo Images
 
+Demo images of the application are shown below:
+Design of the application (Countdown Timer):
 ![image](images/deadline1.png)
+Design of the application (Countdown Timer Ended):
 ![image](images/deadline2.png)
+Global Error Handler:
+![image](images/errorhandler.png)
+Test Coverage:
 ![image](images/coverage.png)
+
+```
+
+```
