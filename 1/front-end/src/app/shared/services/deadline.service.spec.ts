@@ -31,7 +31,7 @@ describe('DeadlineService', () => {
   });
 
   it('should fetch deadline from the API', () => {
-    service.getDeadline().subscribe((deadline) => {
+    service.getDeadline().subscribe(deadline => {
       expect(deadline).toEqual(mockDeadline);
     });
 
@@ -40,24 +40,26 @@ describe('DeadlineService', () => {
 
     req.flush(mockDeadline);
   });
-  
+
   it('should calculate and emit the correct deadline date', () => {
     service.getDeadline().subscribe();
-  
+
     const req = httpMock.expectOne(`${environment.apiBaseUrl}/deadline`);
     req.flush(mockDeadline);
-  
-    service.getDeadlineDate().subscribe((deadlineDate) => {
+
+    service.getDeadlineDate().subscribe(deadlineDate => {
       const now = new Date();
       const expectedDeadlineDate = new Date(now.getTime() + mockDeadline.secondsLeft * 1000);
-  
+
       // Remove millisecond precision for comparison
-      expect(deadlineDate?.toISOString().split('.')[0]).toEqual(expectedDeadlineDate.toISOString().split('.')[0]);
+      expect(deadlineDate?.toISOString().split('.')[0]).toEqual(
+        expectedDeadlineDate.toISOString().split('.')[0]
+      );
     });
   });
 
-  it('should return a countdown observable', (done) => {
-    service.getCountdown().subscribe((secondsLeft) => {
+  it('should return a countdown observable', done => {
+    service.getCountdown().subscribe(secondsLeft => {
       expect(secondsLeft).toBeLessThanOrEqual(mockDeadline.secondsLeft);
       done();
     });
@@ -66,10 +68,10 @@ describe('DeadlineService', () => {
     req.flush(mockDeadline);
   });
 
-  it('should stop the countdown when secondsLeft reaches 0', (done) => {
+  it('should stop the countdown when secondsLeft reaches 0', done => {
     const mockShortDeadline: Deadline = { secondsLeft: 3 }; // Simulate a short deadline
     service.getCountdown().subscribe({
-      next: (secondsLeft) => {
+      next: secondsLeft => {
         expect(secondsLeft).toBeGreaterThanOrEqual(0);
       },
       complete: () => {

@@ -20,7 +20,6 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('front-end');
   });
 
-
   it('should render the header bar with correct text', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();

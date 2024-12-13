@@ -39,8 +39,8 @@ describe('DeadlineComponent', () => {
     expect(mockDeadlineService.getDeadlineDate).toHaveBeenCalledTimes(1);
   });
 
-  it('should update secondsLeft$ observable correctly', (done) => {
-    component.secondsLeft$.subscribe((secondsLeft) => {
+  it('should update secondsLeft$ observable correctly', done => {
+    component.secondsLeft$.subscribe(secondsLeft => {
       expect(secondsLeft).toBe(42);
       done();
     });

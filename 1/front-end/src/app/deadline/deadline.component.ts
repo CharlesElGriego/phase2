@@ -14,5 +14,5 @@ export class DeadlineComponent {
   currentDate = signal(new Date());
   secondsLeft$ = this.deadlineService.getCountdown();
   deadlineDate = this.deadlineService.getDeadlineDate().pipe(take(2));
-  constructor(private readonly deadlineService: DeadlineService) { }
+  constructor(private readonly deadlineService: DeadlineService) {}
 }

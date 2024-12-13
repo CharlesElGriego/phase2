@@ -2,7 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Deadline } from '../models';
-import { BehaviorSubject, distinctUntilChanged, interval, map, Observable, shareReplay, startWith, switchMap, takeWhile, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  interval,
+  map,
+  Observable,
+  shareReplay,
+  startWith,
+  switchMap,
+  takeWhile,
+  tap,
+} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +25,9 @@ export class DeadlineService {
 
   // Fetch deadline from the server
   getDeadline(): Observable<Deadline> {
-    return this.http.get<Deadline>(this.apiUrl).pipe(
-      tap((data) => this.setDeadlineDate(data.secondsLeft)),
-    );
+    return this.http
+      .get<Deadline>(this.apiUrl)
+      .pipe(tap(data => this.setDeadlineDate(data.secondsLeft)));
   }
 
   getCountdown(): Observable<number> {
