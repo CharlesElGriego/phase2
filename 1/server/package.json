@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:dev": "nodemon server.js"
+  },
+  "keywords": [
+    "json-server",
+    "api",
+    "backend",
+    "mock-server"
+  ],
+  "author": "CharlesElGriego",
+  "license": "MIT",
+  "description": "A mock server for serving API endpoints using JSON Server",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "json-server": "^0.17.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
