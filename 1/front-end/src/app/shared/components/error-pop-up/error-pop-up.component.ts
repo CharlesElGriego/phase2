@@ -7,7 +7,7 @@ import { NotificationService } from '../../services';
   imports: [CommonModule],
   templateUrl: './error-pop-up.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  standalone: true, 
+  standalone: true,
 })
 export class ErrorPopUpComponent {
   showErrorWindow$ = this.notificationService.show;

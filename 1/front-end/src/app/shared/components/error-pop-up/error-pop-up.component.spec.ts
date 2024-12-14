@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ErrorPopUpComponent } from './error-pop-up.component';
 import { NotificationService } from '../../services';
+import { ErrorPopUpComponent } from './error-pop-up.component';
 import { of } from 'rxjs';
 
 describe('ErrorPopUpComponent', () => {
@@ -17,9 +17,7 @@ describe('ErrorPopUpComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ErrorPopUpComponent],
-      providers: [
-        { provide: NotificationService, useValue: mockNotificationService },
-      ],
+      providers: [{ provide: NotificationService, useValue: mockNotificationService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ErrorPopUpComponent);
@@ -47,6 +45,4 @@ describe('ErrorPopUpComponent', () => {
     // Verify that the closeError method was called
     expect(notificationService.closeError).toHaveBeenCalledTimes(1);
   });
-
-  
 });

@@ -18,11 +18,11 @@ describe('NotificationService', () => {
 
     service.showError(testError);
 
-    service.show.subscribe((show) => {
+    service.show.subscribe(show => {
       expect(show).toBeTruthy();
     });
 
-    service.message.subscribe((message) => {
+    service.message.subscribe(message => {
       expect(message).toBe(testError.message);
     });
   });
@@ -30,11 +30,11 @@ describe('NotificationService', () => {
   it('should close the error and reset message and show observables', () => {
     service.closeError();
 
-    service.show.subscribe((show) => {
+    service.show.subscribe(show => {
       expect(show).toBeFalsy();
     });
 
-    service.message.subscribe((message) => {
+    service.message.subscribe(message => {
       expect(message).toBeNull();
     });
   });

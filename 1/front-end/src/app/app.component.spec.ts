@@ -14,7 +14,6 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-
   it('should render the header bar with correct text', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
