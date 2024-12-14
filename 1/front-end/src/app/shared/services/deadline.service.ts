@@ -13,6 +13,7 @@ import {
   switchMap,
   takeWhile,
   tap,
+  timer,
 } from 'rxjs';
 
 @Injectable({
@@ -33,8 +34,8 @@ export class DeadlineService {
   getCountdown(): Observable<number> {
     return this.getDeadline().pipe(
       switchMap(data =>
-        interval(1000).pipe(
-          startWith(0),
+        timer(0, 1000).pipe(
+          // Starts immediately and emits every second
           map(elapsedSeconds => Math.max(data.secondsLeft - elapsedSeconds, 0)), // Prevent negative values
           takeWhile(secondsLeft => secondsLeft > 0, true), // Emit `0` once and complete
           distinctUntilChanged() // Eliminate consecutive duplicate emissions
