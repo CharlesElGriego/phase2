@@ -5,11 +5,9 @@ import { Deadline } from '../models';
 import {
   BehaviorSubject,
   distinctUntilChanged,
-  interval,
   map,
   Observable,
   shareReplay,
-  startWith,
   switchMap,
   takeWhile,
   tap,
