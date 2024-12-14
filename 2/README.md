@@ -21,8 +21,9 @@ false
 false
 ```
 
-## Live Demo
+## Bonus: Live Demo
 
+As a bonus, I created a live demo using Angular.
 Go to the first folder where the angular project is, follow the instructions in the README.md file, and go to
 
 http://localhost:4200/cameras-test to see the live demo.
