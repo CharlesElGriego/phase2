@@ -145,9 +145,15 @@ export class CamerasTestComponent {
 
   getErrorMessage(groupPath: string, controlName: string): string {
     const control = this.form.get(`${groupPath}.${controlName}`);
+    const group = this.form.get(groupPath) as FormGroup;
+
+    // Check group-level error first
+    if (group?.hasError('invalidRange')) return 'Invalid range: Min should not exceed Max.';
+
+    // Check control-level errors
     if (control?.hasError('required')) return 'Value is required.';
     if (control?.hasError('min')) return 'Value must be greater than or equal to 0.';
-    if (control?.hasError('invalidRange')) return 'Invalid range: Min should not exceed Max.';
+
     return 'Invalid value.';
   }
   //#endregion
@@ -187,7 +193,7 @@ export class CamerasTestComponent {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private handleError(error: any): void {
+  handleError(error: any): void {
     console.error('Error occurred:', error);
     this.errorMessage = error ?? 'An error occurred';
   }
