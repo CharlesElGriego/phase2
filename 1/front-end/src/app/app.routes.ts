@@ -6,6 +6,11 @@ export const routes: Routes = [
     loadComponent: () => import('./deadline/deadline.component').then(m => m.DeadlineComponent),
   },
   {
+    path: 'cameras-test',
+    loadComponent: () =>
+      import('./cameras-test/cameras-test.component').then(m => m.CamerasTestComponent),
+  },
+  {
     path: '',
     redirectTo: 'deadline',
     pathMatch: 'full',

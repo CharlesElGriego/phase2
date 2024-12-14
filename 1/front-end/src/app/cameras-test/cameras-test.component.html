@@ -1,0 +1,181 @@
+<div class="container mx-auto p-8 bg-gray-100 rounded shadow-md">
+  <h1 class="text-2xl font-bold mb-6 text-center">Camera Coverage Test</h1>
+
+  <form [formGroup]="form" (ngSubmit)="testCoverage()" class="space-y-6">
+    <!-- Desired Distance Range -->
+    <div formGroupName="desiredDistance">
+      <h2 class="text-lg font-semibold mb-2">Desired Distance Range</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label>
+            Min:
+            <input type="number" formControlName="min" class="form-input w-full"
+              [class.border-red-500]="isInvalid('desiredDistance', 'min')" />
+            @if (isInvalid('desiredDistance', 'min')) {
+            <span class="text-red-500 text-sm">{{ getErrorMessage('desiredDistance', 'min') }}</span>
+            }
+          </label>
+        </div>
+        <div>
+          <label>
+            Max:
+            <input type="number" formControlName="max" class="form-input w-full"
+              [class.border-red-500]="isInvalid('desiredDistance', 'max')" />
+            @if (isInvalid('desiredDistance', 'max')) {
+            <span class="text-red-500 text-sm">{{ getErrorMessage('desiredDistance', 'max') }}</span>
+            }
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desired Light Range -->
+    <div formGroupName="desiredLight">
+      <h2 class="text-lg font-semibold mb-2">Desired Light Range</h2>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label>
+            Min:
+            <input type="number" formControlName="min" class="form-input w-full"
+              [class.border-red-500]="isInvalid('desiredLight', 'min')" />
+            @if (isInvalid('desiredLight', 'min')) {
+            <span class="text-red-500 text-sm">{{ getErrorMessage('desiredLight', 'min') }}</span>
+            }
+          </label>
+        </div>
+        <div>
+          <label>
+            Max:
+            <input type="number" formControlName="max" class="form-input w-full"
+              [class.border-red-500]="isInvalid('desiredLight', 'max')" />
+            @if (isInvalid('desiredLight', 'max')) {
+            <span class="text-red-500 text-sm">{{ getErrorMessage('desiredLight', 'max') }}</span>
+            }
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hardware Cameras -->
+    <div>
+      <h2 class="text-lg font-semibold mb-2">Hardware Cameras</h2>
+      <div formArrayName="hardwareCameras">
+        @for ( camera of hardwareCameras.controls; track i; let i = $index) {
+        <div [formGroupName]="i" class="space-y-4 mb-4 p-4 border rounded-md">
+          <h3 class="font-semibold">Camera {{ i + 1 }}</h3>
+
+          <!-- Distance Range -->
+          <div formGroupName="distance">
+            <h4 class="font-semibold">Distance Range</h4>
+            <div>
+              <label>
+                Min:
+                <input type="number" formControlName="min" class="form-input w-full"
+                  [class.border-red-500]="isInvalid('hardwareCameras.' + i + '.distance', 'min')" />
+                @if (isInvalid('hardwareCameras.' + i + '.distance', 'min')) {
+                <span class="text-red-500 text-sm">
+                  {{ getErrorMessage('hardwareCameras.' + i + '.distance', 'min') }}
+                </span>
+                }
+              </label>
+            </div>
+            <div>
+              <label>
+                Max:
+                <input type="number" formControlName="max" class="form-input w-full"
+                  [class.border-red-500]="isInvalid('hardwareCameras.' + i + '.distance', 'max')" />
+                @if (isInvalid('hardwareCameras.' + i + '.distance', 'max')) {
+                <span class="text-red-500 text-sm">
+                  {{ getErrorMessage('hardwareCameras.' + i + '.distance', 'max') }}
+                </span>
+                }
+              </label>
+            </div>
+          </div>
+
+          <!-- Light Range -->
+          <div formGroupName="light">
+            <h4 class="font-semibold">Light Range</h4>
+            <div>
+              <label>
+                Min:
+                <input type="number" formControlName="min" class="form-input w-full"
+                  [class.border-red-500]="isInvalid('hardwareCameras.' + i + '.light', 'min')" />
+                @if (isInvalid('hardwareCameras.' + i + '.light', 'min')) {
+                <span class="text-red-500 text-sm">
+                  {{ getErrorMessage('hardwareCameras.' + i + '.light', 'min') }}
+                </span>
+                }
+              </label>
+            </div>
+            <div>
+              <label>
+                Max:
+                <input type="number" formControlName="max" class="form-input w-full"
+                  [class.border-red-500]="isInvalid('hardwareCameras.' + i + '.light', 'max')" />
+                @if (isInvalid('hardwareCameras.' + i + '.light', 'max')) {
+                <span class="text-red-500 text-sm">
+                  {{ getErrorMessage('hardwareCameras.' + i + '.light', 'max') }}
+                </span>
+                }
+              </label>
+            </div>
+          </div>
+
+          <!-- Remove Button -->
+          <button type="button" (click)="removeHardwareCamera(i)" class="bg-red-500 text-white px-4 py-2 rounded">
+            Remove Camera
+          </button>
+        </div>
+        }
+      </div>
+      <button type="button" (click)="addHardwareCamera()" class="bg-blue-500 text-white px-4 py-2 rounded">
+        Add Camera
+      </button>
+    </div>
+
+    <!-- Test Coverage Button -->
+    <button type="submit" class="bg-green-500 text-white px-6 py-3 rounded w-full transition-opacity duration-300"
+      [disabled]="(loading$ | async) || form.invalid" [class.opacity-50]="(loading$ | async) || form.invalid">
+      @if ((loading$ | async) === false) {
+      Test Coverage
+      } @else {
+      <span>Testing...</span>
+      }
+    </button>
+
+    <!-- Error Display -->
+    @if (errorMessage) {
+    <div class="text-red-500 text-center mt-4">
+      {{ errorMessage }}
+    </div>
+    }
+
+    <!-- Result Display -->
+    @if (result && (loading$ | async) === false && !errorMessage) {
+    <div class="mt-6 text-center">
+      <h2 class="text-xl font-bold">Result</h2>
+      <p class="mt-4 text-lg font-semibold" [ngClass]="{
+             'text-green-500': result === 'Sufficient Coverage',
+             'text-red-500': result === 'Insufficient Coverage'
+           }">
+        {{ result }}
+      </p>
+    </div>
+    }
+    <!-- Compatible Cameras -->
+    @if (result === 'Sufficient Coverage' && compatibleCameras.length > 0) {
+    <div class="mt-4">
+      <h3 class="text-lg font-semibold">Compatible Cameras:</h3>
+      <ul class="list-disc ml-6">
+        @for ( camera of compatibleCameras; track i; let i = $index) {
+        <li>
+          Camera {{ camera.cameraIndex }} - Distance: [{{ camera.distance[0] }} - {{ camera.distance[1] }}], Light:
+          [{{ camera.light[0] }} - {{ camera.light[1] }}]
+        </li>
+        }
+      </ul>
+    </div>
+    }
+  </form>
+</div>
