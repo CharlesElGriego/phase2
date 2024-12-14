@@ -34,23 +34,20 @@ export class CamerasTestComponent {
   loading$ = new BehaviorSubject<boolean>(false);
 
   constructor(private readonly fb: FormBuilder) {
-    this.form = this.fb.group<CamerasTestForm>({
-      desiredDistance: this.fb.group(
-        {
+    this.form = this.fb.group<CamerasTestForm>(
+      {
+        desiredDistance: this.fb.group({
           min: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
           max: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
-        },
-        { validators: this.minMaxValidator }
-      ),
-      desiredLight: this.fb.group(
-        {
+        }),
+        desiredLight: this.fb.group({
           min: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
           max: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
-        },
-        { validators: this.minMaxValidator }
-      ),
-      hardwareCameras: this.fb.array<FormGroup<CameraForm>>([], [this.requiredArrayValidator]),
-    });
+        }),
+        hardwareCameras: this.fb.array<FormGroup<CameraForm>>([], [this.requiredArrayValidator]),
+      },
+      { validators: this.formLevelValidator } // Attach the form-level validator here
+    );
   }
 
   get hardwareCameras(): FormArray<FormGroup<CameraForm>> {
@@ -58,16 +55,19 @@ export class CamerasTestComponent {
   }
 
   addHardwareCamera(): void {
-    const cameraGroup = this.fb.group<CameraForm>({
-      distance: this.fb.group({
-        min: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
-        max: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
-      }),
-      light: this.fb.group({
-        min: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
-        max: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
-      }),
-    });
+    const cameraGroup = this.fb.group<CameraForm>(
+      {
+        distance: this.fb.group({
+          min: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
+          max: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
+        }),
+        light: this.fb.group({
+          min: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
+          max: this.fb.control<number | null>(null, [Validators.required, Validators.min(0)]),
+        }),
+      },
+      { validators: this.cameraGroupValidator } // CAN I ADD THIS ONE ON HERE?
+    );
     this.hardwareCameras.push(cameraGroup);
   }
 
@@ -147,12 +147,27 @@ export class CamerasTestComponent {
     const control = this.form.get(`${groupPath}.${controlName}`);
     const group = this.form.get(groupPath) as FormGroup;
 
-    // Check group-level error first
-    if (group?.hasError('invalidRange')) return 'Invalid range: Min should not exceed Max.';
+    // Check for form-level errors
+    if (this.form?.hasError('distanceInvalidRange') && groupPath === 'desiredDistance') {
+      return 'Invalid range: Distance Min should not exceed Max.';
+    }
+
+    if (this.form?.hasError('lightInvalidRange') && groupPath === 'desiredLight') {
+      return 'Invalid range: Light Min should not exceed Max.';
+    }
+
+    // Check group-level error
+    if (group?.hasError('invalidRange')) {
+      return 'Invalid range: Min should not exceed Max.';
+    }
 
     // Check control-level errors
-    if (control?.hasError('required')) return 'Value is required.';
-    if (control?.hasError('min')) return 'Value must be greater than or equal to 0.';
+    if (control?.hasError('required')) {
+      return 'Value is required.';
+    }
+    if (control?.hasError('min')) {
+      return 'Value must be greater than or equal to 0.';
+    }
 
     return 'Invalid value.';
   }
@@ -221,6 +236,50 @@ export class CamerasTestComponent {
   private requiredArrayValidator(control: AbstractControl): { [key: string]: boolean } | null {
     const formArray = control as FormArray; // Cast control to FormArray
     return formArray.length > 0 ? null : { required: true };
+  }
+  private formLevelValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    const form = control as FormGroup;
+    const desiredDistance = form.get('desiredDistance') as FormGroup;
+    const desiredLight = form.get('desiredLight') as FormGroup;
+
+    const distanceMin = desiredDistance?.get('min')?.value;
+    const distanceMax = desiredDistance?.get('max')?.value;
+    const lightMin = desiredLight?.get('min')?.value;
+    const lightMax = desiredLight?.get('max')?.value;
+
+    const errors: { [key: string]: boolean } = {};
+
+    if (distanceMin !== null && distanceMax !== null && distanceMin > distanceMax) {
+      errors['distanceInvalidRange'] = true;
+    }
+
+    if (lightMin !== null && lightMax !== null && lightMin > lightMax) {
+      errors['lightInvalidRange'] = true;
+    }
+
+    // If there are any errors, return the error object; otherwise, return null
+    return Object.keys(errors).length > 0 ? errors : null;
+  }
+
+  private cameraGroupValidator(control: AbstractControl): { [key: string]: boolean } | null {
+    console.log('Camera group validator:', control);
+    const group = control as FormGroup;
+    const distanceMin = group.get('distance.min')?.value;
+    const distanceMax = group.get('distance.max')?.value;
+    const lightMin = group.get('light.min')?.value;
+    const lightMax = group.get('light.max')?.value;
+
+    const errors: { [key: string]: boolean } = {};
+
+    if (distanceMin !== null && distanceMax !== null && distanceMin > distanceMax) {
+      errors['distanceInvalidRange'] = true;
+    }
+
+    if (lightMin !== null && lightMax !== null && lightMin > lightMax) {
+      errors['lightInvalidRange'] = true;
+    }
+
+    return Object.keys(errors).length > 0 ? errors : null;
   }
   //#endregion
 }

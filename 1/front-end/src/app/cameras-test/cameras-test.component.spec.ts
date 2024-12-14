@@ -197,18 +197,53 @@ describe('CamerasTestComponent', () => {
   });
 
   describe('Validators', () => {
-    it('should return { required: true } if the form array is empty', () => {
-      const emptyArray = fb.array([]);
-      const result = component['requiredArrayValidator'](emptyArray);
-
-      expect(result).toEqual({ required: true });
+    it('should return distanceInvalidRange error if min is greater than max in desiredDistance', () => {
+      component.form.patchValue({ desiredDistance: { min: 20, max: 10 } });
+      expect(component.form.errors).toEqual({ distanceInvalidRange: true });
     });
 
-    it('should return null if the form array has elements', () => {
-      const nonEmptyArray = fb.array([fb.group({})]);
-      const result = component['requiredArrayValidator'](nonEmptyArray);
+    it('should return lightInvalidRange error if min is greater than max in desiredLight', () => {
+      component.form.patchValue({ desiredLight: { min: 50, max: 30 } });
+      expect(component.form.errors).toEqual({ lightInvalidRange: true });
+    });
 
-      expect(result).toBeNull();
+    it('should return distanceInvalidRange error for a hardware camera group', () => {
+      component.addHardwareCamera();
+      component.hardwareCameras.at(0)?.patchValue({
+        distance: { min: 15, max: 5 },
+        light: { min: 10, max: 20 },
+      });
+      expect(component.hardwareCameras.at(0)?.errors).toEqual({ distanceInvalidRange: true });
+    });
+
+    it('should return lightInvalidRange error for a hardware camera group', () => {
+      component.addHardwareCamera();
+      component.hardwareCameras.at(0)?.patchValue({
+        distance: { min: 5, max: 15 },
+        light: { min: 30, max: 20 },
+      });
+      expect(component.hardwareCameras.at(0)?.errors).toEqual({ lightInvalidRange: true });
+    });
+
+    it('should validate the entire form as invalid if form-level validators fail', () => {
+      component.form.patchValue({
+        desiredDistance: { min: 20, max: 10 },
+        desiredLight: { min: 50, max: 30 },
+      });
+      expect(component.form.valid).toBe(false);
+    });
+
+    it('should validate the entire form as valid if no validation errors exist', () => {
+      component.form.patchValue({
+        desiredDistance: { min: 5, max: 15 },
+        desiredLight: { min: 10, max: 20 },
+      });
+      component.addHardwareCamera();
+      component.hardwareCameras.at(0)?.patchValue({
+        distance: { min: 5, max: 15 },
+        light: { min: 10, max: 20 },
+      });
+      expect(component.form.valid).toBe(true);
     });
   });
 
